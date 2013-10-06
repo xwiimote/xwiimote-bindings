@@ -100,6 +100,9 @@ XWIIEXCEPTION_ERRNO which must use the error number as ERRNO
 	  case SWIG_SystemError:
 		  PyErr_SetFromErrno(PyExc_SystemError);
 		  break;
+	  case SWIG_ValueError:
+		  PyErr_SetFromErrno(PyExc_ValueError);
+		  break;
 	  }
 	  return NULL; /* this return must not be remove, otherwise python exception doesn't work ;
 			  contrary to SWIG_exception which must not have a return after */
@@ -197,11 +200,21 @@ struct xwii_monitor {
 %rename(set_time) xe_set_time;
 %rename(ir_is_valid) xe_ir_is_valid;
 
+/* exceptions */
+XWIIEXCEPTION_ERRNO(xe_get_abs)
+XWIIEXCEPTION_ERRNO(xe_set_abs)
+XWIIEXCEPTION_ERRNO(xe_ir_is_valid)
+
 struct xwii_event {
 	unsigned int type;
 %extend {
 	void xe_get_abs(int n, int* x, int *y, int* z)
 	{
+		if(n<0 || n>=XWII_ABS_NUM)
+		{
+			xwii_throw_exception("xwii_event_get_abs failed", -EINVAL, SWIG_ValueError);
+			return;
+		}
 		*x = (int) $self->v.abs[n].x;
 		*y = (int) $self->v.abs[n].y;
 		*z = (int) $self->v.abs[n].z;
@@ -209,6 +222,11 @@ struct xwii_event {
 	
 	void xe_set_abs(int n, int x, int y, int z)
 	{
+		if(n<0 || n>=XWII_ABS_NUM)
+		{
+			xwii_throw_exception("xwii_event_set_abs failed", -EINVAL, SWIG_ValueError);
+			return;
+		}
 		$self->v.abs[n].x = (int32_t) x;
 		$self->v.abs[n].y = (int32_t) y;
 		$self->v.abs[n].z = (int32_t) z;
@@ -242,6 +260,7 @@ struct xwii_event {
 	{
 		if(n<0 || n>=XWII_ABS_NUM) /* avoid a segfault */
 		{
+			xwii_throw_exception("xwii_event_ir_is_valid failed", -EINVAL, SWIG_ValueError);
 			return false;
 		}
 		return xwii_event_ir_is_valid($self->v.abs+n);
@@ -368,6 +387,11 @@ struct xwii_iface {
 	{
 		bool state;
 		int ret;
+		if(led<XWII_LED1 || led>XWII_LED4)
+		{
+			xwii_throw_exception("xwii_iface_get_led failed", -EINVAL, SWIG_ValueError);
+			return false;
+		}
 		if((ret=xwii_iface_get_led($self, led, &state)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_get_led failed", ret, SWIG_IOError);
@@ -378,6 +402,11 @@ struct xwii_iface {
 	void xif_set_led(unsigned int led, bool state)
 	{
 		int ret;
+		if(led<XWII_LED1 || led>XWII_LED4)
+		{
+			xwii_throw_exception("xwii_iface_get_sed failed", -EINVAL, SWIG_ValueError);
+			return;
+		}
 		if((ret=xwii_iface_set_led($self, led, state)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_set_led failed", ret, SWIG_IOError);
