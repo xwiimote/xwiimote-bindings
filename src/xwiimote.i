@@ -313,10 +313,12 @@ struct xwii_iface {
 		
 		if((ret=xwii_iface_new(&dev, syspath)) != 0) {
 			xwii_throw_exception("xwii_iface_new() failed", ret, SWIG_IOError);
+			return NULL;
 		}
 		if((ret=xwii_iface_watch(dev, true)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_watch() failed", ret, SWIG_IOError);
+			return NULL;
 		}
 		return dev;
 	}
@@ -395,6 +397,7 @@ struct xwii_iface {
 		if((ret=xwii_iface_get_led($self, led, &state)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_get_led failed", ret, SWIG_IOError);
+			return false;
 		}
 		return state;
 	}
@@ -420,6 +423,7 @@ struct xwii_iface {
 		if((ret=xwii_iface_get_battery($self, &capacity)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_get_battery failed", ret, SWIG_IOError);
+			return 0;
 		}
 		return ((int) capacity);
 	}
@@ -431,6 +435,7 @@ struct xwii_iface {
 		if((ret=xwii_iface_get_devtype($self, &devtype)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_get_devtype failed", ret, SWIG_IOError);
+			return NULL;
 		}
 		return devtype;
 	}
@@ -442,6 +447,7 @@ struct xwii_iface {
 		if((ret=xwii_iface_get_extension($self, &extension)) != 0)
 		{
 			xwii_throw_exception("xwii_iface_get_extension failed", ret, SWIG_IOError);
+			return NULL;
 		}
 		return extension;
 	}
