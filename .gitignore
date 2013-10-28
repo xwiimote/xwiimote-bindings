@@ -4,6 +4,7 @@ Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
+build/
 build-aux/
 config.h
 config.h.in
@@ -13,5 +14,16 @@ config.status
 configure
 libtool
 m4/
+perl/MYMETA.json
+perl/MYMETA.yml
+perl/Makefile.PL
+perl/Makefile.perl
+perl/blib/
+perl/perl_wrap.*
+perl/pm_to_blib
+perl/xwiimote.*
 python/setup.py
 stamp-h1
+xwiimote.py
+xwiimote_wrap.c
+

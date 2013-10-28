@@ -47,12 +47,20 @@ fi
 AM_PATH_PYTHON(, [have_python="yes"], [have_python="no"])
 AM_CONDITIONAL(HAVE_PYTHON, test "x$have_python" = "xyes")
 
+have_perl="no"
+AC_PATH_PROG([PERL], [perl], ["no"])
+if test ! "x$perl" = "xno" ; then
+        have_perl="yes"
+fi
+AM_CONDITIONAL(HAVE_PERL, test "x$have_perl" = "xyes")
+
 #
 # Write configuration
 #
 
 AC_CONFIG_FILES([Makefile
-                 python/setup.py])
+                 python/setup.py
+                 perl/Makefile.PL])
 AC_OUTPUT
 
 AC_MSG_NOTICE([Build configuration:
@@ -63,5 +71,6 @@ AC_MSG_NOTICE([Build configuration:
            includedir: $includedir
 
        python binding: $have_python
+         perl binding: $have_perl
 
         Run "${MAKE-make}" to start compilation process])
