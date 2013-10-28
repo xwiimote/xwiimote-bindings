@@ -1,0 +1,42 @@
+Overview {#mainpage}
+========
+
+xwiimote-bindings provides bindings for the xwiimote library for languages
+other than C. You need to install xwiimote before you can use xwiimote-bindings.
+
+xwiimote is an open-source device driver for Nintendo Wii / Wii U remotes. It
+contains tools and libraries which work together with the official hid-wiimote
+kernel driver. Please see the website for more information:
+  http://dvdhrm.github.io/xwiimote
+
+Install
+=======
+
+To install the xwiimote-bindings package, run:
+	$ ./configure [--prefix=/usr]
+	$ make
+	$ make install
+If "configure" is not available, use:
+	$ ./autogen.sh [<configure-flags>]
+
+Dependencies:
+	- xwiimote: The official xwiimote driver package
+
+Usage & Documentation
+=====================
+
+Please see the website for help:
+  http://dvdhrm.github.io/xwiimote
+
+Copying
+=======
+
+Please see ./COPYING for more information.
+
+Contact
+=======
+
+Website:
+  http://dvdhrm.github.io/xwiimote
+
+For email contact please see ./COPYING for a list of maintainers.

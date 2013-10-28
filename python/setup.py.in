@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+"""
+setup.py file for SWIG xwiimote
+"""
+
+from distutils.core import setup, Extension
+
+xwiimote_module = Extension('_xwiimote',
+                            sources=['xwiimote_wrap.c'],
+                            include_dirs=['@XWIIMOTE_INCLUDEDIR@'],
+                            library_dirs=['@XWIIMOTE_LIBDIR@'],
+                            libraries=['xwiimote'],
+                           )
+
+setup(name = 'xwiimote',
+      version = '@PACKAGE_VERSION@',
+      author = "Nicolas Adenis-Lamarre",
+      author_email = "nicolas.adenis.lamarre@gmail.com",
+      url = "https://github.com/dvdhrm/xwiimote-bindings",
+      description = """Open Source Nintendo Wii Remote Linux Device Driver.""",
+      license = "MIT-like license. See LICENSE for the licensing terms.",
+      ext_modules = [xwiimote_module],
+      py_modules = ["xwiimote"],
+     )

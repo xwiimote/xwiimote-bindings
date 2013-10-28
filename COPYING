@@ -1,0 +1,13 @@
+= Licensing Information =
+
+This software package is licensed under a MIT-like license. See LICENSE for
+the licensing terms. This applies to all files (code, documentation, ...)
+shipped with this distribution. If a specific file has no license header, the
+header in LICENSE shall apply. If a file has a license header which differs from
+LICENSE, then the license terms specified in this file shall apply.
+
+== Developers ==
+
+This software is written by:
+  Nicolas Adenis-Lamarre - nicolas.adenis.lamarre@gmail.com
+  David Herrmann - dh.herrmann@gmail.com
