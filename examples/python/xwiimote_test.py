@@ -7,7 +7,6 @@ import errno
 from time import sleep
 from select import poll, POLLIN
 from inspect import getmembers
-from pprint import pprint
 import xwiimote
 
 # display a constant
@@ -46,13 +45,16 @@ try:
     dev.open(dev.available() | xwiimote.IFACE_WRITABLE)
     print "opened mask:", dev.opened()
 
-    dev.rumble(True)
-    sleep(1/4.0)
-    dev.rumble(False)
-    dev.set_led(1, dev.get_led(2))
-    dev.set_led(2, dev.get_led(3))
-    dev.set_led(3, dev.get_led(4))
-    dev.set_led(4, dev.get_led(4) == False)
+    dev.set_led(1, True)
+    if dev.get_devtype() != "balanceboard":
+	    dev.rumble(True)
+	    sleep(1/4.0)
+	    dev.rumble(False)
+
+	    dev.set_led(2, dev.get_led(3))
+	    dev.set_led(3, dev.get_led(4))
+	    dev.set_led(4, dev.get_led(4) == False)
+
     print "capacity:",  dev.get_battery(), "%"
     print "devtype:",   dev.get_devtype()
     print "extension:", dev.get_extension()
@@ -82,6 +84,14 @@ while n < 2:
             n = 2
         elif evt.type == xwiimote.EVENT_WATCH:
             print "Watch"
+        elif evt.type == xwiimote.EVENT_BALANCE_BOARD:
+            print "Balance Board"
+            br, _, _ = evt.get_abs(0)
+            fr, _, _ = evt.get_abs(1)
+            bl, _, _  = evt.get_abs(2)
+            fl, _, _  = evt.get_abs(3)
+            print "\tFront Left: {0}\tFront Right: {1}\t".format(fl, fr)
+            print "\tBack Left:  {0}\tBack Right:  {1}\t".format(bl, br)
         elif evt.type == xwiimote.EVENT_CLASSIC_CONTROLLER_KEY:
             code, state = evt.get_key()
             print "Classical controller key:", code, state
