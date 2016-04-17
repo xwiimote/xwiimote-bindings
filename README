@@ -19,8 +19,14 @@ To install the xwiimote-bindings package, run:
 If "configure" is not available, use:
 	$ ./autogen.sh [<configure-flags>]
 
-Dependencies:
+Runtime Dependencies:
 	- xwiimote: The official xwiimote driver package
+	
+Build Dependencies:
+	- swig
+	- autoconf
+	- libtool
+	- libxwiimote-dev
 
 Usage & Documentation
 =====================
