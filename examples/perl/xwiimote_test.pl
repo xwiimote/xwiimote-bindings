@@ -54,10 +54,12 @@ eval {
     #$dev->rumble(1);
     #usleep(1000000/3);
     #$dev->rumble(0);
-    $dev->set_led(1, $dev->get_led(2));
-    $dev->set_led(2, $dev->get_led(3));
-    $dev->set_led(3, $dev->get_led(4));
-    $dev->set_led(4, !$dev->get_led(4));
+    $dev->set_led(1, 1);
+    if($dev->get_devtype() != "balanceboard") {
+        $dev->set_led(2, $dev->get_led(3));
+        $dev->set_led(3, $dev->get_led(4));
+        $dev->set_led(4, !$dev->get_led(4));
+    }
 
     print "capacity: "  . $dev->get_battery()   . "%\n";
     print "devtype: "   . $dev->get_devtype()   . "\n";
@@ -125,6 +127,18 @@ while($n < 2) {
 	    	}
 		$i++;
 	    }
+        } elsif($evt->{type} == $xwiimote::EVENT_BALANCE_BOARD) {
+            ($tr, undef, undef) = $evt->get_abs(0);
+            ($br, undef, undef) = $evt->get_abs(1);
+            ($tl, undef, undef) = $evt->get_abs(2);
+            ($bl, undef, undef) = $evt->get_abs(3);
+            $tot = $tr + $br + $tl + $bl;
+            # Top Left, Top Right, Bottom Left, Bottom Right
+            printf "Balance board:   %5d %5d \n", $tl, $tr;
+            printf "Sum:    %5d    %5d %5d \n", $tot, $bl, $br;
+        } elsif($evt->{type} == $xwiimote::EVENT_BALANCE_BOARD_KEY) {
+            ($code, $state) = $evt->get_key();
+	    print "Balance board button state: " . $state . "\n";
 	} else {
 	    if($evt->{type} != $xwiimote::EVENT_ACCEL) {
 		print "type:" . $evt->{type} . "\n";
