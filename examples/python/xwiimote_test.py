@@ -46,13 +46,14 @@ try:
     dev.open(dev.available() | xwiimote.IFACE_WRITABLE)
     print("opened mask:", dev.opened())
 
-    dev.rumble(True)
-    sleep(1/4.0)
-    dev.rumble(False)
-    dev.set_led(1, dev.get_led(2))
-    dev.set_led(2, dev.get_led(3))
-    dev.set_led(3, dev.get_led(4))
-    dev.set_led(4, dev.get_led(4) == False)
+    dev.set_led(1, True)
+    if dev.get_devtype() != "balanceboard":
+        dev.rumble(True)
+        sleep(1/4.0)
+        dev.rumble(False)
+        dev.set_led(2, dev.get_led(3))
+        dev.set_led(3, dev.get_led(4))
+        dev.set_led(4, dev.get_led(4) == False)
     print("capacity:",  dev.get_battery(), "%")
     print("devtype:",   dev.get_devtype())
     print("extension:", dev.get_extension())
@@ -107,6 +108,18 @@ while n < 2:
                 if evt.ir_is_valid(i):
                     x, y, z = evt.get_abs(i)
                     print("IR", i, x, y, z)
+        elif evt.type == xwiimote.EVENT_BALANCE_BOARD:
+            tr, _, _ = evt.get_abs(0)
+            br, _, _ = evt.get_abs(1)
+            tl, _, _ = evt.get_abs(2)
+            bl, _, _ = evt.get_abs(3)
+            tot = tl + tr + bl + br
+            # Top Left, Top Right, Bottom Left, Bottom Right
+            print("Balance board: {:5d} {:5d}".format(tl, tr))
+            print("Sum:    {:5d}  {:5d} {:5d}".format(tot, bl, br))
+        elif evt.type == xwiimote.EVENT_BALANCE_BOARD_KEY:
+            _, state = evt.get_key()
+            print("Balance board button state {}".format(state))
         else:
             if evt.type != xwiimote.EVENT_ACCEL:
                 print("type:", evt.type)
