@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import xwiimote
 import select
 import errno
 
 def print_wiimotes(wiimotes):
-    print "+--------------------------------------------+"
-    print "| %-40s %i |" % (xwiimote.iface.get_name(xwiimote.IFACE_CORE), len(wiimotes['all']))
-    print "+--------------------------------------------+"
-    for devtype, devlist in wiimotes.iteritems():
+    print("+--------------------------------------------+")
+    print("| %-40s %i |" % (xwiimote.iface.get_name(xwiimote.IFACE_CORE), len(wiimotes['all'])))
+    print("+--------------------------------------------+")
+    for devtype, devlist in wiimotes.items():
         if devtype != 'all':
-            print "| %-40s %i |" % (xwiimote.iface.get_name(devtype), len(devlist))
-    print "+--------------------------------------------+"
+            print("| %-40s %i |" % (xwiimote.iface.get_name(devtype), len(devlist)))
+    print("+--------------------------------------------+")
 
 def read_monitor(mon, wiimotes):
     newmotes = []
@@ -23,19 +24,19 @@ def read_monitor(mon, wiimotes):
             news = open_subdevices(dev, wiimotes)
             newmotes.append(dev)
         except IOError as eo:
-            print "Fail on creating the wiimote (", eo, ")"
+            print("Fail on creating the wiimote (", eo, ")")
         wiimote_path = mon.poll()
     return newmotes
 
 def remove_device(wiimotes, dev):
-    for devtype, devlist in wiimotes.iteritems():
+    for devtype, devlist in wiimotes.items():
         if dev in devlist:
             devlist.remove(dev)
     print_wiimotes(wiimotes)
 
 def open_subdevices(dev, wiimotes):
     news = False
-    for devtype, devlist in wiimotes.iteritems():
+    for devtype, devlist in wiimotes.items():
         if devtype != 'all':
             news = open_subdevice(dev, devlist, devtype) or news
     return news
@@ -64,7 +65,7 @@ def open_subdevice(dev, currents, ext):
         currents.append(dev)
         return True
     except IOError:
-        print "Ooops, unable to open the device"
+        print("Ooops, unable to open the device")
 
     return False
 
@@ -81,7 +82,7 @@ try:
         p.register(dev.get_fd(), select.POLLIN)
     print_wiimotes(wiimotes)
 except SystemError as e:
-    print "ooops, cannot create monitor (", e, ")"
+    print("ooops, cannot create monitor (", e, ")")
     exit(1)
 
 # register devices
@@ -122,16 +123,16 @@ try:
                                     (code, state) = revt.get_key()
                                     if state == True:
                                         if code == xwiimote.KEY_PLUS:
-                                            print "plus"
+                                            print("plus")
                                         elif code == xwiimote.KEY_MINUS:
-                                            print "minus"
+                                            print("minus")
                         except IOError as e:
                             if e.errno != errno.EAGAIN:
-                                print e
+                                print(e)
                                 p.unregister(dev.get_fd())
                                 remove_device(wiimotes, dev)
 except KeyboardInterrupt:
-    print "exiting..."
+    print("exiting...")
 
 # cleaning
 for dev in wiimotes['all']:
